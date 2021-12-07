@@ -150,9 +150,10 @@ def genarate_user_token(request, organization_slug, pk):
             "user_balance": user_instance.user_balance,
             "user_token": unique_id
         }
-
+        print(data)
         serializer = UsersSerializers(user_instance, data=data)
         if serializer.is_valid():
+            print("girdii")
             serializer.save()
 
         return Response(

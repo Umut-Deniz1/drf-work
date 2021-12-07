@@ -5,23 +5,7 @@ from subcase.models import Users, Organizations,Transactions
 
 
 
-class TransactionsSerializers(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    transaction_type = serializers.CharField(max_length=200)
-    transaction_amount = serializers.IntegerField()
-    transaction_status = serializers.CharField(max_length=200)
-    user_id = serializers.StringRelatedField()
-    #user_id = UsersSerializers()
 
-    def create(self, validated_data):
-        return Transactions.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.transaction_type = validated_data.get("transaction_type", instance.transaction_type)
-        instance.transaction_amount = validated_data.get("transaction_amount", instance.transaction_amount)
-        instance.transaction_status = validated_data.get("transaction_status", instance.transaction_status)
-        instance.save()
-        return instance
 
 
 class OrganizationsSerializers(serializers.Serializer):
@@ -38,7 +22,7 @@ class OrganizationsSerializers(serializers.Serializer):
         return instance
 
 class UsersSerializers(serializers.Serializer):
-    transactions = TransactionsSerializers(many=True)
+    #transactions = TransactionsSerializers(many=True)
 
     id = serializers.IntegerField(read_only=True)
     user_name = serializers.CharField(max_length=200)
@@ -62,7 +46,23 @@ class UsersSerializers(serializers.Serializer):
         return instance
 
 
+class TransactionsSerializers(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    transaction_type = serializers.CharField(max_length=200)
+    transaction_amount = serializers.IntegerField()
+    transaction_status = serializers.CharField(max_length=200)
+    #user_id = serializers.StringRelatedField()
+    user_id = UsersSerializers()
 
+    def create(self, validated_data):
+        return Transactions.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.transaction_type = validated_data.get("transaction_type", instance.transaction_type)
+        instance.transaction_amount = validated_data.get("transaction_amount", instance.transaction_amount)
+        instance.transaction_status = validated_data.get("transaction_status", instance.transaction_status)
+        instance.save()
+        return instance
 
 
 
